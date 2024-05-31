@@ -40,7 +40,10 @@ import { EXPORT_MESSAGE_CLASS_NAME, ModelProvider } from "../constant";
 import { getClientConfig } from "../config/client";
 import { ClientApi } from "../client/api";
 import { getMessageTextContent } from "../utils";
-import { identifyDefaultClaudeModel } from "../utils/checkers";
+import {
+  identifyDefaultBaiduModel,
+  identifyDefaultClaudeModel,
+} from "../utils/checkers";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -312,12 +315,15 @@ export function PreviewActions(props: {
   const config = useAppConfig();
   const onRenderMsgs = (msgs: ChatMessage[]) => {
     setShouldExport(false);
+    console.log(config.modelConfig.model);
 
     var api: ClientApi;
     if (config.modelConfig.model.startsWith("gemini")) {
       api = new ClientApi(ModelProvider.GeminiPro);
     } else if (identifyDefaultClaudeModel(config.modelConfig.model)) {
       api = new ClientApi(ModelProvider.Claude);
+    } else if (identifyDefaultBaiduModel(config.modelConfig.model)) {
+      api = new ClientApi(ModelProvider.Baidu);
     } else {
       api = new ClientApi(ModelProvider.GPT);
     }

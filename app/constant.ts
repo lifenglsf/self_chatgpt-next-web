@@ -8,7 +8,8 @@ export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/c
 export const FETCH_TAG_URL = `https://api.github.com/repos/${OWNER}/${REPO}/tags?per_page=1`;
 export const RUNTIME_CONFIG_DOM = "danger-runtime-config";
 
-export const DEFAULT_API_HOST = "https://api.nextchat.dev";
+//export const DEFAULT_API_HOST = "https://api.nextchat.dev";
+export const DEFAULT_API_HOST = "http://localhost:8000";
 export const OPENAI_BASE_URL = "https://api.openai.com";
 export const ANTHROPIC_BASE_URL = "https://api.anthropic.com";
 
@@ -27,6 +28,7 @@ export enum ApiPath {
   Cors = "",
   OpenAI = "/api/openai",
   Anthropic = "/api/anthropic",
+  Baidu = "/api/baidu",
 }
 
 export enum SlotID {
@@ -70,12 +72,15 @@ export enum ServiceProvider {
   Azure = "Azure",
   Google = "Google",
   Anthropic = "Anthropic",
+  Baidu = "Baidu",
 }
 
 export enum ModelProvider {
   GPT = "GPT",
   GeminiPro = "GeminiPro",
   Claude = "Claude",
+  Default = "Default",
+  Baidu = "Baidu",
 }
 
 export const Anthropic = {
@@ -91,7 +96,21 @@ export const OpenaiPath = {
   SubsPath: "dashboard/billing/subscription",
   ListModelPath: "v1/models",
 };
+export const DefaultkPath = {
+  ChatPath: "v1/chat/completions",
+};
+export const Baidu = {
+  ChatPath: "v1/chat/completions",
+  ExampleEndpoint: "https://generativelanguage.googleapis.com/",
+};
 
+export const AliPath = {
+  ChatPath: "v1/chat/completions",
+};
+
+export const DeepPath = {
+  ChatPath: "v1/chat/completions",
+};
 export const Azure = {
   ExampleEndpoint: "https://{resource-url}/openai/deployments/{deploy-id}",
 };
@@ -149,7 +168,7 @@ const openaiModels = [
   "gpt-4o",
   "gpt-4o-2024-05-13",
   "gpt-4-vision-preview",
-  "gpt-4-turbo-2024-04-09"
+  "gpt-4-turbo-2024-04-09",
 ];
 
 const googleModels = [
@@ -167,7 +186,19 @@ const anthropicModels = [
   "claude-3-opus-20240229",
   "claude-3-haiku-20240307",
 ];
-
+const BaiduMoels = [
+  "Yi-34B-Chat",
+  "Fuyu-8B",
+  "ernie_speed",
+  "ernie_speed",
+  "eb-instant",
+  "ernie-lite-8k",
+  "ernie-tiny-8k",
+  "ai_apaas",
+];
+const AliModels = [""];
+const DeepModels = ["deepseek-chat", "deepseek-coder"];
+const SparkModels = ["v1", "v2", "v3"];
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
@@ -185,6 +216,42 @@ export const DEFAULT_MODELS = [
       id: "google",
       providerName: "Google",
       providerType: "google",
+    },
+  })),
+  ...BaiduMoels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "baidu",
+      providerName: "Baidu",
+      providerType: "baidu",
+    },
+  })),
+  ...AliModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "default",
+      providerName: "default",
+      providerType: "default",
+    },
+  })),
+  ...DeepModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "default",
+      providerName: "default",
+      providerType: "default",
+    },
+  })),
+  ...SparkModels.map((name) => ({
+    name,
+    available: true,
+    provider: {
+      id: "default",
+      providerName: "default",
+      providerType: "default",
     },
   })),
   ...anthropicModels.map((name) => ({

@@ -19,3 +19,16 @@ export function identifyDefaultClaudeModel(modelName: string) {
     modelMeta.provider?.providerType === "anthropic"
   );
 }
+export function identifyDefaultBaiduModel(modelName: string) {
+  const accessStore = useAccessStore.getState();
+  const configStore = useAppConfig.getState();
+
+  const allModals = collectModels(
+    configStore.models,
+    [configStore.customModels, accessStore.customModels].join(","),
+  );
+
+  const modelMeta = allModals.find((m) => m.name === modelName);
+
+  return modelMeta && modelMeta.provider?.providerType === "baidu";
+}

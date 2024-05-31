@@ -20,7 +20,10 @@ import { prettyObject } from "../utils/format";
 import { estimateTokenLength } from "../utils/token";
 import { nanoid } from "nanoid";
 import { createPersistStore } from "../utils/store";
-import { identifyDefaultClaudeModel } from "../utils/checkers";
+import {
+  identifyDefaultBaiduModel,
+  identifyDefaultClaudeModel,
+} from "../utils/checkers";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { useAccessStore } from "./access";
 
@@ -87,6 +90,7 @@ function createEmptySession(): ChatSession {
 }
 
 function getSummarizeModel(currentModel: string) {
+  console.log("current model", currentModel);
   // if it is using gpt-* models, force to use 3.5 to summarize
   if (currentModel.startsWith("gpt")) {
     const configStore = useAppConfig.getState();
@@ -368,6 +372,8 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Claude);
+        } else if (identifyDefaultBaiduModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Baidu);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }
@@ -386,6 +392,7 @@ export const useChatStore = createPersistStore(
             });
           },
           onFinish(message) {
+            console.log("finish 3");
             botMessage.streaming = false;
             if (message) {
               botMessage.content = message;
@@ -552,6 +559,8 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Claude);
+        } else if (identifyDefaultBaiduModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Baidu);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }
@@ -572,20 +581,21 @@ export const useChatStore = createPersistStore(
               content: Locale.Store.Prompt.Topic,
             }),
           );
-          api.llm.chat({
-            messages: topicMessages,
-            config: {
-              model: getSummarizeModel(session.mask.modelConfig.model),
-              stream: false,
-            },
-            onFinish(message) {
-              get().updateCurrentSession(
-                (session) =>
-                  (session.topic =
-                    message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
-              );
-            },
-          });
+          // api.llm.chat({
+          //   messages: topicMessages,
+          //   config: {
+          //     model: getSummarizeModel(session.mask.modelConfig.model),
+          //     stream: false,
+          //   },
+          //   onFinish(message) {
+          //     console.log("finish 1")
+          //     get().updateCurrentSession(
+          //       (session) =>
+          //         (session.topic =
+          //           message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
+          //     );
+          //   },
+          // });
         }
         const summarizeIndex = Math.max(
           session.lastSummarizeIndex,
@@ -626,33 +636,34 @@ export const useChatStore = createPersistStore(
            * this param is just shit
            **/
           const { max_tokens, ...modelcfg } = modelConfig;
-          api.llm.chat({
-            messages: toBeSummarizedMsgs.concat(
-              createMessage({
-                role: "system",
-                content: Locale.Store.Prompt.Summarize,
-                date: "",
-              }),
-            ),
-            config: {
-              ...modelcfg,
-              stream: true,
-              model: getSummarizeModel(session.mask.modelConfig.model),
-            },
-            onUpdate(message) {
-              session.memoryPrompt = message;
-            },
-            onFinish(message) {
-              console.log("[Memory] ", message);
-              get().updateCurrentSession((session) => {
-                session.lastSummarizeIndex = lastSummarizeIndex;
-                session.memoryPrompt = message; // Update the memory prompt for stored it in local storage
-              });
-            },
-            onError(err) {
-              console.error("[Summarize] ", err);
-            },
-          });
+          // api.llm.chat({
+          //   messages: toBeSummarizedMsgs.concat(
+          //     createMessage({
+          //       role: "system",
+          //       content: Locale.Store.Prompt.Summarize,
+          //       date: "",
+          //     }),
+          //   ),
+          //   config: {
+          //     ...modelcfg,
+          //     stream: true,
+          //     model: getSummarizeModel(session.mask.modelConfig.model),
+          //   },
+          //   onUpdate(message) {
+          //     session.memoryPrompt = message;
+          //   },
+          //   onFinish(message) {
+          //     console.log("finish2")
+          //     console.log("[Memory] ", message);
+          //     get().updateCurrentSession((session) => {
+          //       session.lastSummarizeIndex = lastSummarizeIndex;
+          //       session.memoryPrompt = message; // Update the memory prompt for stored it in local storage
+          //     });
+          //   },
+          //   onError(err) {
+          //     console.error("[Summarize] ", err);
+          //   },
+          // });
         }
       },
 

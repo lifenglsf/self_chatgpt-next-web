@@ -34,6 +34,9 @@ const DEFAULT_ACCESS_STATE = {
 
   // google ai studio
   googleUrl: "",
+  baiduUrl: "",
+  baiduApiKey: "",
+
   googleApiKey: "",
   googleApiVersion: "v1",
 
@@ -65,7 +68,9 @@ export const useAccessStore = createPersistStore(
     isValidOpenAI() {
       return ensure(get(), ["openaiApiKey"]);
     },
-
+    isValidBaidu() {
+      return ensure(get(), ["baiduApiKey"]);
+    },
     isValidAzure() {
       return ensure(get(), ["azureUrl", "azureApiKey", "azureApiVersion"]);
     },
@@ -83,6 +88,7 @@ export const useAccessStore = createPersistStore(
 
       // has token or has code or disabled access control
       return (
+        this.isValidBaidu() ||
         this.isValidOpenAI() ||
         this.isValidAzure() ||
         this.isValidGoogle() ||
