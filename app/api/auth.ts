@@ -76,6 +76,9 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
       case ModelProvider.Baidu:
         systemApiKey = serverConfig.baiduApiKey;
         break;
+      case ModelProvider.Spark:
+        systemApiKey = serverConfig.sparkApiKey;
+        break;
       case ModelProvider.GPT:
       default:
         if (serverConfig.isAzure) {

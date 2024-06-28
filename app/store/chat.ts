@@ -21,8 +21,11 @@ import { estimateTokenLength } from "../utils/token";
 import { nanoid } from "nanoid";
 import { createPersistStore } from "../utils/store";
 import {
+  identifyDefaultAliModel,
   identifyDefaultBaiduModel,
   identifyDefaultClaudeModel,
+  identifyDefaultDeepModel,
+  identifyDefaultSparkModel,
 } from "../utils/checkers";
 import { collectModelsWithDefaultModel } from "../utils/model";
 import { useAccessStore } from "./access";
@@ -374,6 +377,12 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.Claude);
         } else if (identifyDefaultBaiduModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Baidu);
+        } else if (identifyDefaultAliModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Ali);
+        } else if (identifyDefaultSparkModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Spark);
+        } else if (identifyDefaultDeepModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Deep);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }
@@ -555,12 +564,19 @@ export const useChatStore = createPersistStore(
         const modelConfig = session.mask.modelConfig;
 
         var api: ClientApi;
+        console.log(modelConfig);
         if (modelConfig.model.startsWith("gemini")) {
           api = new ClientApi(ModelProvider.GeminiPro);
         } else if (identifyDefaultClaudeModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Claude);
         } else if (identifyDefaultBaiduModel(modelConfig.model)) {
           api = new ClientApi(ModelProvider.Baidu);
+        } else if (identifyDefaultSparkModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Spark);
+        } else if (identifyDefaultAliModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Ali);
+        } else if (identifyDefaultDeepModel(modelConfig.model)) {
+          api = new ClientApi(ModelProvider.Deep);
         } else {
           api = new ClientApi(ModelProvider.GPT);
         }

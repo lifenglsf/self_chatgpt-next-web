@@ -12,7 +12,7 @@ async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[Spark Route] params ", params);
+  console.log("[Ali Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
@@ -22,7 +22,7 @@ async function handle(
 
   const serverConfig = getServerSideConfig();
 
-  let baseUrl = serverConfig.sparkUrl || DEFAULT_API_HOST;
+  let baseUrl = serverConfig.aliUrl || DEFAULT_API_HOST;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;

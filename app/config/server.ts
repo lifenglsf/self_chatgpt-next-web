@@ -93,6 +93,8 @@ export const getServerSideConfig = () => {
   const isGoogle = !!process.env.GOOGLE_API_KEY;
   const isAnthropic = !!process.env.ANTHROPIC_API_KEY;
   const isBaidu = !!process.env.BAIDU_API_KEY;
+  const isSpark = !!process.env.SPARK_API_KEY;
+  const isDeep = !!process.env.DEEP_API_KEY;
 
   // const apiKeyEnvVar = process.env.OPENAI_API_KEY ?? "";
   // const apiKeys = apiKeyEnvVar.split(",").map((v) => v.trim());
@@ -124,10 +126,14 @@ export const getServerSideConfig = () => {
     anthropicApiKey: getApiKey(process.env.ANTHROPIC_API_KEY),
     anthropicApiVersion: process.env.ANTHROPIC_API_VERSION,
     anthropicUrl: process.env.ANTHROPIC_URL,
-
+    isBaidu,
     baiduApiKey: getApiKey(process.env.BAIDU_API_KEY),
     baiduApiVersion: process.env.BAIDU_API_VERSION,
     baiduUrl: process.env.BAIDU_URL,
+    isSpark,
+    sparkUrl: process.env.SPARK_URL,
+    sparkApiKey: getApiKey(process.env.SPARK_API_KEY),
+    aliUrl: process.env.ALI_URL,
 
     gtmId: process.env.GTM_ID,
 

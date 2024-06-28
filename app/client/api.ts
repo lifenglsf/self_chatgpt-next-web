@@ -11,6 +11,9 @@ import { GeminiProApi } from "./platforms/google";
 import { ClaudeApi } from "./platforms/anthropic";
 import { DefaultApi } from "./platforms/default";
 import { BaiduApi } from "./platforms/baidu";
+import { SparkApi } from "./platforms/spark";
+import { AliApi } from "./platforms/ali";
+import { DeepApi } from "./platforms/deep";
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
 
@@ -72,7 +75,15 @@ export abstract class LLMApi {
   abstract models(): Promise<LLMModel[]>;
 }
 
-type ProviderName = "openai" | "azure" | "claude" | "palm" | "baidu";
+type ProviderName =
+  | "openai"
+  | "azure"
+  | "claude"
+  | "palm"
+  | "baidu"
+  | "spark"
+  | "ali"
+  | "deep";
 
 interface Model {
   name: string;
@@ -109,6 +120,15 @@ export class ClientApi {
         break;
       case ModelProvider.Baidu:
         this.llm = new BaiduApi();
+        break;
+      case ModelProvider.Spark:
+        this.llm = new SparkApi();
+        break;
+      case ModelProvider.Ali:
+        this.llm = new AliApi();
+        break;
+      case ModelProvider.Deep:
+        this.llm = new DeepApi();
         break;
       default:
         this.llm = new ChatGPTApi();

@@ -4,7 +4,7 @@ import {
   Baidu,
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
-  DefaultkPath,
+  DefaultPath,
   OpenaiPath,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,

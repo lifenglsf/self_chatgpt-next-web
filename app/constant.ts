@@ -29,6 +29,9 @@ export enum ApiPath {
   OpenAI = "/api/openai",
   Anthropic = "/api/anthropic",
   Baidu = "/api/baidu",
+  Spark = "/api/spark",
+  Deep = "/api/deep",
+  Ali = "/api/ali",
 }
 
 export enum SlotID {
@@ -73,6 +76,9 @@ export enum ServiceProvider {
   Google = "Google",
   Anthropic = "Anthropic",
   Baidu = "Baidu",
+  Spark = "Spark",
+  Deep = "Deep",
+  Ali = "Ali",
 }
 
 export enum ModelProvider {
@@ -81,6 +87,9 @@ export enum ModelProvider {
   Claude = "Claude",
   Default = "Default",
   Baidu = "Baidu",
+  Spark = "Spark",
+  Deep = "Deep",
+  Ali = "Ali",
 }
 
 export const Anthropic = {
@@ -96,14 +105,17 @@ export const OpenaiPath = {
   SubsPath: "dashboard/billing/subscription",
   ListModelPath: "v1/models",
 };
-export const DefaultkPath = {
+export const DefaultPath = {
   ChatPath: "v1/chat/completions",
 };
 export const Baidu = {
   ChatPath: "v1/chat/completions",
   ExampleEndpoint: "https://generativelanguage.googleapis.com/",
 };
-
+export const Spark = {
+  ChatPath: "v1/chat/completions",
+  ExampleEndpoint: "https://generativelanguage.googleapis.com/",
+};
 export const AliPath = {
   ChatPath: "v1/chat/completions",
 };
@@ -196,9 +208,20 @@ const BaiduMoels = [
   "ernie-tiny-8k",
   "ai_apaas",
 ];
-const AliModels = [""];
+const AliModels = [
+  "qwen2-1.5b-instruct",
+  "qwen2-0.5b-instruct",
+  "qwen1.5-1.8b-chat",
+  "qwen1.5-0.5b-chat",
+  "qwen-1.8b-chat",
+  "qwen-vl-v1",
+  "qwen-vl-chat-v1",
+  "baichuan-7b-v1",
+  "chatglm3-6b",
+  //"multimodal-embedding-one-peace-v1"
+];
 const DeepModels = ["deepseek-chat", "deepseek-coder"];
-const SparkModels = ["v1", "v2", "v3"];
+const SparkModels = ["spark_lite", "spark_v2", "spark_pro", "spark_v3.5"];
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
     name,
@@ -231,27 +254,27 @@ export const DEFAULT_MODELS = [
     name,
     available: true,
     provider: {
-      id: "default",
-      providerName: "default",
-      providerType: "default",
+      id: "ali",
+      providerName: "Ali",
+      providerType: "ali",
     },
   })),
   ...DeepModels.map((name) => ({
     name,
     available: true,
     provider: {
-      id: "default",
-      providerName: "default",
-      providerType: "default",
+      id: "deep",
+      providerName: "Deep",
+      providerType: "deep",
     },
   })),
   ...SparkModels.map((name) => ({
     name,
     available: true,
     provider: {
-      id: "default",
-      providerName: "default",
-      providerType: "default",
+      id: "spark",
+      providerName: "Spark",
+      providerType: "spark",
     },
   })),
   ...anthropicModels.map((name) => ({

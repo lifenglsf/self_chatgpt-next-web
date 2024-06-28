@@ -1,6 +1,7 @@
 "use client";
 import {
   ApiPath,
+  Baidu,
   DEFAULT_API_HOST,
   DEFAULT_MODELS,
   DefaultPath,
@@ -63,7 +64,7 @@ function trimEnd(s: string, end = " ") {
 
   return s;
 }
-export class DefaultApi implements LLMApi {
+export class DeepApi implements LLMApi {
   private disableListModels = true;
 
   path(path: string): string {
@@ -72,14 +73,14 @@ export class DefaultApi implements LLMApi {
     let baseUrl: string = "";
 
     if (accessStore.useCustomConfig) {
-      baseUrl = accessStore.anthropicUrl;
+      baseUrl = accessStore.sparkUrl;
     }
-
+    console.log("baseurl", baseUrl);
     // if endpoint is empty, use default endpoint
     if (baseUrl.trim().length === 0) {
       const isApp = !!getClientConfig()?.isApp;
 
-      baseUrl = isApp ? DEFAULT_API_HOST + "/api/baidu" : ApiPath.Anthropic;
+      baseUrl = isApp ? DEFAULT_API_HOST + "/api/deep" : ApiPath.Deep;
     }
 
     if (!baseUrl.startsWith("http") && !baseUrl.startsWith("/api")) {
@@ -163,7 +164,6 @@ export class DefaultApi implements LLMApi {
             }
             return;
           }
-
           if (remainText.length > 0) {
             const fetchCount = Math.max(1, Math.round(remainText.length / 60));
             const fetchText = remainText.slice(0, fetchCount);
@@ -179,10 +179,8 @@ export class DefaultApi implements LLMApi {
         animateResponseText();
 
         const finish = () => {
-          if (!finished) {
-            finished = true;
-            options.onFinish(responseText + remainText);
-          }
+          finished = true;
+          options.onFinish(responseText + remainText);
         };
 
         controller.signal.onabort = finish;
@@ -201,7 +199,6 @@ export class DefaultApi implements LLMApi {
               responseText = await res.clone().text();
               return finish();
             }
-
             if (
               !res.ok ||
               !res.headers
@@ -235,28 +232,10 @@ export class DefaultApi implements LLMApi {
             }
             const text = msg.data;
             try {
-              const json = JSON.parse(text);
-              const choices = json.choices as Array<{
-                delta: { content: string };
-              }>;
-              const delta = choices[0]?.delta?.content;
-              const textmoderation = json?.prompt_filter_results;
-
+              const delta = text;
               if (delta) {
                 remainText += delta;
-              }
-
-              if (
-                textmoderation &&
-                textmoderation.length > 0 &&
-                ServiceProvider.Azure
-              ) {
-                const contentFilterResults =
-                  textmoderation[0]?.content_filter_results;
-                console.log(
-                  `[${ServiceProvider.Azure}] [Text Moderation] flagged categories result:`,
-                  contentFilterResults,
-                );
+                options.onUpdate?.(responseText, remainText);
               }
             } catch (e) {
               console.error("[Request] parse error", text, msg);
@@ -274,7 +253,6 @@ export class DefaultApi implements LLMApi {
       } else {
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);
-
         const resJson = await res.json();
         const message = this.extractMessage(resJson);
         options.onFinish(message);
@@ -374,9 +352,9 @@ export class DefaultApi implements LLMApi {
       name: m.id,
       available: true,
       provider: {
-        id: "default",
-        providerName: "default",
-        providerType: "default",
+        id: "deep",
+        providerName: "Deep",
+        providerType: "deep",
       },
     }));
   }

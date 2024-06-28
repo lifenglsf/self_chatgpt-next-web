@@ -36,6 +36,10 @@ const DEFAULT_ACCESS_STATE = {
   googleUrl: "",
   baiduUrl: "",
   baiduApiKey: "",
+  aliApiKey: "",
+  deepApiKey: "",
+  sparkUrl: "",
+  sparkApiKey: "",
 
   googleApiKey: "",
   googleApiVersion: "v1",
@@ -71,6 +75,15 @@ export const useAccessStore = createPersistStore(
     isValidBaidu() {
       return ensure(get(), ["baiduApiKey"]);
     },
+    isValidSpark() {
+      return ensure(get(), ["sparkApiKey"]);
+    },
+    isValidAli() {
+      return ensure(get(), ["aliApiKey"]);
+    },
+    isValidDeep() {
+      return ensure(get(), ["deepApiKey"]);
+    },
     isValidAzure() {
       return ensure(get(), ["azureUrl", "azureApiKey", "azureApiVersion"]);
     },
@@ -88,6 +101,9 @@ export const useAccessStore = createPersistStore(
 
       // has token or has code or disabled access control
       return (
+        this.isValidAli() ||
+        this.isValidDeep() ||
+        this.isValidSpark() ||
         this.isValidBaidu() ||
         this.isValidOpenAI() ||
         this.isValidAzure() ||
